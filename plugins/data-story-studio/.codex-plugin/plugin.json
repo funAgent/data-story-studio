@@ -1,0 +1,28 @@
+{
+  "name": "data-story-studio",
+  "version": "0.1.0",
+  "description": "Build editable local CSV/JSON dashboards and deterministic data-driven MP4 animations with Codex.",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Data Story Studio",
+    "shortDescription": "Local dashboards and videos",
+    "category": "Productivity",
+    "defaultPrompt": [
+      "Build an interactive dashboard from my local CSV file.",
+      "Turn my dashboard snapshot into an editable MP4 animation."
+    ],
+    "longDescription": "Turn local CSV or JSON data into interactive dashboards, then render a selected chart as an editable animation with PNG previews and MP4 export. Includes explicit source refresh and provenance. Motion requires Node.js, Canvas and FFmpeg; imported line/table charts are represented as bars. No data connectors, background sync or hosted publishing.",
+    "developerName": "funAgent",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "brandColor": "#142F3A",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  },
+  "author": {
+    "name": "Data Story Studio"
+  },
+  "license": "MIT"
+}

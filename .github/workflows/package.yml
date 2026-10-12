@@ -1,0 +1,28 @@
+name: Build reviewable source archives
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Build source archives
+        run: |
+          python tests/build_bundle.py --output "$RUNNER_TEMP/data-story-studio-source.zip"
+          python tests/build_bundle.py --plugin-only --output "$RUNNER_TEMP/data-story-studio-plugin.zip"
+          cd "$RUNNER_TEMP"
+          sha256sum data-story-studio-source.zip data-story-studio-plugin.zip > SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: data-story-studio-source-archives
+          path: |
+            ${{ runner.temp }}/data-story-studio-source.zip
+            ${{ runner.temp }}/data-story-studio-plugin.zip
+            ${{ runner.temp }}/SHA256SUMS
+          retention-days: 14

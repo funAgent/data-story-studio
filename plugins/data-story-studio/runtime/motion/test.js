@@ -1,0 +1,28 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),os=require('node:os'),{spawnSync}=require('node:child_process'),M=require('./motion'),{aggregateSnapshot,assertPath}=require('./cli');
+const base=require('./samples/project.json');let n=0;function test(label,fn){fn();n++;console.log('PASS '+label)}
+const copy=()=>JSON.parse(JSON.stringify(base));
+test('sample validation',()=>M.validate(copy()));
+for(const value of [NaN,Infinity,-1,1e13,'12'])test('reject invalid numeric '+value,()=>{const p=copy();p.source.rows[0][1]=value;assert.throws(()=>M.validate(p))});
+test('reject duration mismatch',()=>{const p=copy();p.durationFrames--;assert.throws(()=>M.validate(p))});
+test('reject unsupported scene',()=>{const p=copy();p.scenes[0].type='html';assert.throws(()=>M.validate(p))});
+test('reject huge scene count',()=>{const p=copy();p.scenes=Array(100).fill(p.scenes[0]);assert.throws(()=>M.validate(p))});
+test('text remains inert',()=>{const p=copy();p.scenes[0].title='<script>process.exit()</script>';M.validate(p);const c=require('@napi-rs/canvas').createCanvas(1280,720);M.render(c,p,40);assert.equal(c.toBuffer('image/png').subarray(1,4).toString(),'PNG')});
+const s={schema_version:1,title:'Example',rows:[{q:'Q1',v:2},{q:'Q1',v:4},{q:'Q2',v:8}],dimensions:['q'],metrics:[{id:'sum:v',field:'v',aggregation:'sum'}],charts:[{type:'bar',dimension:'q',metric:'sum:v'}],provenance:{sha256:'a'.repeat(64),row_count:3}};
+test('sum aggregation',()=>assert.deepEqual(aggregateSnapshot(s,0).rows,[['Q1',6],['Q2',8]]));
+test('mean aggregation',()=>{const c=structuredClone(s);c.metrics[0].aggregation='mean';assert.deepEqual(aggregateSnapshot(c,0).rows,[['Q1',3],['Q2',8]])});
+test('count aggregation',()=>{const c=structuredClone(s);c.metrics[0].aggregation='count';assert.deepEqual(aggregateSnapshot(c,0).rows,[['Q1',2],['Q2',1]])});
+test('null count matches dashboard',()=>{const c=structuredClone(s);c.rows[0].v=null;c.metrics[0].aggregation='count';assert.deepEqual(aggregateSnapshot(c,0).rows,[['Q1',1],['Q2',1]])});
+test('null mean matches dashboard',()=>{const c=structuredClone(s);c.rows[0].v=null;c.metrics[0].aggregation='mean';assert.deepEqual(aggregateSnapshot(c,0).rows,[['Q1',4],['Q2',8]])});
+test('all-null mean rejected',()=>{const c=structuredClone(s);c.rows[2].v=null;c.metrics[0].aggregation='mean';assert.throws(()=>aggregateSnapshot(c,0))});
+test('all-null sum rejected',()=>{const c=structuredClone(s);c.rows[2].v=null;assert.throws(()=>aggregateSnapshot(c,0),/all-null sum/)});
+test('missing selected metric rejected for every aggregation',()=>{for(const aggregation of ['sum','mean','count']){const c=structuredClone(s);delete c.rows[0].v;c.metrics[0].aggregation=aggregation;assert.throws(()=>aggregateSnapshot(c,0),/Missing selected metric field/)}});
+test('reject oversized categories',()=>{const c=structuredClone(s);c.rows=Array.from({length:9},(_,i)=>({q:'Q'+i,v:i}));c.provenance.row_count=9;assert.throws(()=>aggregateSnapshot(c,0))});
+test('reject traversal',()=>assert.throws(()=>assertPath('/tmp/a/../b')));
+const temp=fs.mkdtempSync(path.join(os.tmpdir(),'motion-tests-'));const run=(...args)=>spawnSync(process.execPath,[path.join(__dirname,'cli.js'),...args],{encoding:'utf8'});
+try{test('reject dangling symlink',()=>{fs.symlinkSync(path.join(temp,'missing'),path.join(temp,'link'));assert.throws(()=>assertPath(path.join(temp,'link','test')))});
+ const project=path.join(temp,'project');test('initialize fresh project',()=>assert.equal(run('init','--project-dir',project).status,0));test('refuse overwrite project',()=>assert.notEqual(run('init','--project-dir',project).status,0));
+ test('PNG export actual bytes',()=>{assert.equal(run('render','--project-dir',project,'--format','png').status,0);assert.equal(fs.readFileSync(path.join(project,'preview.png')).subarray(1,4).toString(),'PNG')});
+ test('refuse overwrite PNG',()=>assert.notEqual(run('render','--project-dir',project,'--format','png').status,0));
+ fs.writeFileSync(path.join(temp,'snapshot.json'),JSON.stringify(s));test('snapshot retains exact source',()=>{assert.equal(run('import-snapshot','--project-dir',project,'--input',path.join(temp,'snapshot.json')).status,0);assert.deepEqual(JSON.parse(fs.readFileSync(path.join(project,'snapshot-project.json'))).snapshot.original,s)});
+}finally{fs.rmSync(temp,{recursive:true,force:true})}console.log(`${n} tests passed`);

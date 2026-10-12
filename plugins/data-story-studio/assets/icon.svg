@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">Data Story Studio: data bars and a play symbol</title>
+  <rect width="128" height="128" rx="28" fill="#142F3A"/>
+  <rect x="24" y="72" width="16" height="32" rx="4" fill="#66DFC0"/>
+  <rect x="48" y="51" width="16" height="53" rx="4" fill="#66DFC0"/>
+  <rect x="72" y="30" width="16" height="74" rx="4" fill="#66DFC0"/>
+  <circle cx="91" cy="82" r="24" fill="#F9F7ED"/>
+  <path d="M85 70 102 82 85 94Z" fill="#142F3A"/>
+</svg>

@@ -1,0 +1,13 @@
+{
+  "origin": "Independent Dashboard_Motion_Prototype / motion-reconstruction source bundle supplied in this task; not proprietary Claude or Remotion source",
+  "retained_files": {
+    "original-project.json": "9d1f96136541ae493e2af75d13a96bcaed75294ed18a04685477ff20ff04e371",
+    "original-motion.js": "83a669f8539c512c4e0db58baaaf969edf63c49d8ed9f8f280942a95fbd2eb77"
+  },
+  "adaptations": [
+    "Strict generic category/value scene validation",
+    "Offline explicit-project CLI instead of server",
+    "Dashboard snapshot sum/mean/count aggregation with source retention",
+    "Portable system-font selection and removal of the fixed year badge"
+  ]
+}

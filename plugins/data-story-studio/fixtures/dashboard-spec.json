@@ -1,0 +1,13 @@
+{
+  "title": "Example sales · synthetic sample data",
+  "dimensions": ["month", "region"],
+  "metrics": [
+    {"field": "revenue", "aggregation": "sum"},
+    {"field": "orders", "aggregation": "sum"}
+  ],
+  "charts": [
+    {"type": "line", "dimension": "month", "metric": "sum:revenue"},
+    {"type": "bar", "dimension": "region", "metric": "sum:revenue"},
+    {"type": "table", "dimension": "month", "metric": "sum:orders"}
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "verified_at": "2026-10-12T02:15:47Z",
+  "unit_tests": 26,
+  "node": "v24.19.0",
+  "canvas": "0.1.100",
+  "mp4_probe": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "width": 1280,
+        "height": 720,
+        "nb_frames": "360"
+      }
+    ],
+    "format": {
+      "duration": "12.000000"
+    }
+  },
+  "decode_errors": [],
+  "visual_check": "CJK PNG checked: Chinese title and labels legible, values 150/120/0.",
+  "dependency_bootstrap": "Reused preinstalled dependencies; clean npm install not verified; offline lock resolution failed due to uncached registry metadata.",
+  "regression_tests": "Reject all-null sum/mean and missing selected metric fields for sum, mean and count.",
+  "record_type": "Historical pre-OSS verification record; current release checks are in docs/QA.md"
+}

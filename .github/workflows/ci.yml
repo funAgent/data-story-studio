@@ -1,0 +1,45 @@
+name: Validate source and runtime
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - python: '3.10'
+            node: '22'
+          - python: '3.13'
+            node: '24'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: plugins/data-story-studio/runtime/motion/package-lock.json
+      - name: Install FFmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Install locked motion dependency
+        working-directory: plugins/data-story-studio/runtime/motion
+        run: npm ci --omit=dev --ignore-scripts --no-audit --no-fund
+      - name: Python regression tests
+        run: |
+          python -m unittest discover -s tests -v
+          python -m unittest discover -s plugins/data-story-studio/tests -v
+      - name: Node regression tests
+        run: node plugins/data-story-studio/runtime/motion/test.js
+      - name: End-to-end dashboard and video smoke
+        run: python tests/smoke.py

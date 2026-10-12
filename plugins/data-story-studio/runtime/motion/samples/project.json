@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "id": "quarterly-explainer",
+  "revision": 1,
+  "title": "Illustrative quarterly revenue",
+  "fps": 30,
+  "width": 1280,
+  "height": 720,
+  "durationFrames": 720,
+  "theme": {
+    "background": "#111c24",
+    "foreground": "#f2f0e9",
+    "accent": "#baf27d",
+    "muted": "#8ea3ad"
+  },
+  "source": {
+    "label": "Illustrative data \u00b7 not a real company",
+    "columns": [
+      "category",
+      "value"
+    ],
+    "rows": [
+      [
+        "Q1",
+        120
+      ],
+      [
+        "Q2",
+        145
+      ],
+      [
+        "Q3",
+        180
+      ],
+      [
+        "Q4",
+        216
+      ]
+    ],
+    "valuePrefix": "$",
+    "valueSuffix": "k"
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "type": "headline",
+      "start": 0,
+      "duration": 180,
+      "title": "A stronger year.",
+      "subtitle": "Revenue across four illustrative quarters.",
+      "metric": "80%",
+      "metricLabel": "revenue growth \u00b7 Q1 to Q4"
+    },
+    {
+      "id": "revenue",
+      "type": "barChart",
+      "start": 180,
+      "duration": 330,
+      "title": "Growth built every quarter.",
+      "subtitle": "Revenue \u00b7 USD thousands",
+      "series": "revenue"
+    },
+    {
+      "id": "summary",
+      "type": "summary",
+      "start": 510,
+      "duration": 210,
+      "title": "Revenue at a glance.",
+      "subtitle": "Four illustrative quarters, retained in editable source.",
+      "metric": "$216k",
+      "metricLabel": "Q4 revenue"
+    }
+  ]
+}

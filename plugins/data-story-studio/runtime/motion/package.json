@@ -1,0 +1,15 @@
+{
+  "name": "data-story-motion-runtime",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Offline Canvas / FFmpeg data-story runtime",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "0.1.100"
+  },
+  "scripts": {
+    "test": "node test.js"
+  }
+}

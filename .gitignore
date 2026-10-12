@@ -1,0 +1,24 @@
+# Dependencies and interpreter caches
+node_modules/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+# Private inputs, runtime workspaces and output
+.data-story-runtime/
+data-story-workspace.json
+.render-*/
+dist/
+artifacts/
+*.zip
+*.mp4
+*.png
+*.metadata.json
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.DS_Store
+npm-debug.log*
